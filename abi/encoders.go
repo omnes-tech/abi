@@ -10,6 +10,7 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 )
 
+// EncodeWithSelector encodes function call based on its selector.
 func EncodeWithSelector(selector [4]byte, typeStrs []string, params ...any) ([]byte, error) {
 
 	if len(typeStrs) != len(params) {
@@ -30,12 +31,13 @@ func EncodeWithSelector(selector [4]byte, typeStrs []string, params ...any) ([]b
 
 }
 
+// EncodeWithSignature encodes function call based on its signature.
 func EncodeWithSignature(funcSignature string, params ...any) ([]byte, error) {
 	if funcSignature == "" {
 		return []byte{}, nil
 	}
 
-	selector := EncodeSelector(funcSignature)
+	selector := EncodeSignature(funcSignature)
 	paramTypes, err := getSigTypes(funcSignature)
 	if err != nil {
 		return []byte{}, err
@@ -62,10 +64,12 @@ func EncodeWithSignature(funcSignature string, params ...any) ([]byte, error) {
 
 }
 
-func EncodeSelector(funcSignature string) []byte {
+// EncodeSignature encodes signature to 4-byte selector.
+func EncodeSignature(funcSignature string) []byte {
 	return crypto.Keccak256([]byte(funcSignature))[:4]
 }
 
+// Encode encodes given arguments based on provided types.
 func Encode(typeStrs []string, values ...any) ([]byte, error) {
 	if len(typeStrs) != len(values) {
 		return []byte{}, fmt.Errorf("typeStrs and values must have the same length. typeStrs: %v, values: %v", typeStrs, values)
@@ -138,6 +142,8 @@ func Encode(typeStrs []string, values ...any) ([]byte, error) {
 	return final, nil
 }
 
+// EncodePacked encodes given arguments based on provided types
+// with packed encoding.
 func EncodePacked(typeStrs []string, values ...any) ([]byte, error) {
 	if len(typeStrs) != len(values) {
 		return []byte{}, fmt.Errorf("typeStrs and values must have the same length. typeStrs: %v, values: %v", typeStrs, values)
@@ -191,6 +197,7 @@ func EncodePacked(typeStrs []string, values ...any) ([]byte, error) {
 	return result, nil
 }
 
+// encode encodes given argument based on provided type string.
 func encode(typeStr string, value any) ([]byte, error) {
 	encoded, err := encodePacked(typeStr, value)
 	if err != nil {
@@ -214,6 +221,8 @@ func encode(typeStr string, value any) ([]byte, error) {
 	return encoded, nil
 }
 
+// encodePacked encodes given argument based on provided type string
+// with packed encoding.
 func encodePacked(typeStr string, value any) ([]byte, error) {
 
 	bytes := make([]byte, 0)
@@ -361,6 +370,7 @@ func encodePacked(typeStr string, value any) ([]byte, error) {
 	return bytes, nil
 }
 
+// calculateHeadLength calculates encoded bytecode head length.
 func calculateHeadLength(rawHeadChunks [][]byte) uint64 {
 	headLength := uint64(0)
 	for _, chunk := range rawHeadChunks {
@@ -374,6 +384,7 @@ func calculateHeadLength(rawHeadChunks [][]byte) uint64 {
 	return headLength
 }
 
+// calculateTailOffsets calculates encoded bytecode tail offsets.
 func calculateTailOffsets(tailChunks [][]byte) []uint64 {
 
 	tailOffsets := []uint64{0}
@@ -386,6 +397,7 @@ func calculateTailOffsets(tailChunks [][]byte) []uint64 {
 	return tailOffsets
 }
 
+// buildHeadChunks builds the head chunk for the encoded bytecode.
 func buildHeadChunks(rawHeadChunks [][]byte, tailOffsets []uint64, headLength uint64) ([][]byte, error) {
 	if len(rawHeadChunks) != len(tailOffsets) {
 		return nil, fmt.Errorf("tailOffsets and rawHeadChunks must be the same length")
@@ -403,10 +415,12 @@ func buildHeadChunks(rawHeadChunks [][]byte, tailOffsets []uint64, headLength ui
 	return headChunks, nil
 }
 
+// encodeUint256 encodes value specifically to `uint256`.
 func encodeUint256(value *big.Int) []byte {
 	return common.LeftPadBytes(value.Bytes(), 32)
 }
 
+// joinChunks joins array of byte arrays.
 func joinChunks(headChunks [][]byte, tailChunks [][]byte) []byte {
 
 	joined := make([]byte, 0)
@@ -422,6 +436,7 @@ func joinChunks(headChunks [][]byte, tailChunks [][]byte) []byte {
 	return joined
 }
 
+// pow performs exponentiation for big.Float number.
 func pow(a *big.Float, e uint64) *big.Float {
 	result := zero().Copy(a)
 	for i := uint64(0); i < e-1; i++ {
@@ -430,12 +445,14 @@ func pow(a *big.Float, e uint64) *big.Float {
 	return result
 }
 
+// zero returns 0 in big.Float type.
 func zero() *big.Float {
 	r := big.NewFloat(0.0)
 	r.SetPrec(256)
 	return r
 }
 
+// mul multiplies two big.Float arguments
 func mul(a, b *big.Float) *big.Float {
 	return zero().Mul(a, b)
 }

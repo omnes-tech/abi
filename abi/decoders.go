@@ -9,6 +9,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 )
 
+// DecodeWithSelector decodes bytecode restricted to given selector.
 func DecodeWithSelector(selector [4]byte, typeStrs []string, data []byte) ([]any, error) {
 	if !isSelectorIsEqual(selector, data[:4]) {
 		return []any{}, fmt.Errorf("invalid selector")
@@ -17,13 +18,14 @@ func DecodeWithSelector(selector [4]byte, typeStrs []string, data []byte) ([]any
 	return Decode(typeStrs, data[4:])
 }
 
+// DecodeWithSignature decodes bytecode based on given signature.
 func DecodeWithSignature(funcSignature string, data []byte) ([]any, error) {
 	typeStrs, err := getSigTypes(funcSignature)
 	if err != nil {
 		return []any{}, err
 	}
 
-	selector := EncodeSelector(funcSignature)
+	selector := EncodeSignature(funcSignature)
 	if !isSelectorIsEqual([4]byte(selector), data[:4]) {
 		return []any{}, fmt.Errorf("invalid selector")
 	}
@@ -31,6 +33,9 @@ func DecodeWithSignature(funcSignature string, data []byte) ([]any, error) {
 	return Decode(typeStrs, data[4:])
 }
 
+// DecodePacked decodes bytecode following packed format.
+// It supports only one dynamic type (either string or bytes)
+// as last item in typeStrs array.
 func DecodePacked(typeStrs []string, data []byte) ([]any, error) {
 	var result []any
 	var byteCursor uint64
@@ -78,6 +83,7 @@ func DecodePacked(typeStrs []string, data []byte) ([]any, error) {
 	return result, nil
 }
 
+// Decode decodes bytecode to given type strings
 func Decode(typeStrs []string, data []byte) ([]any, error) {
 
 	var result []any
@@ -152,6 +158,7 @@ func Decode(typeStrs []string, data []byte) ([]any, error) {
 	return result, nil
 }
 
+// decode decodes give bytecode slice to specified type.
 func decode(typeStr string, data []byte) (any, error) {
 	var decoded any
 	var err error
@@ -174,6 +181,8 @@ func decode(typeStr string, data []byte) (any, error) {
 	return decoded, nil
 }
 
+// decodePacked decodes bytecode slice to given type considering
+// packed format.
 func decodePacked(typeStr string, data []byte) (any, error) {
 
 	switch typeStr {
@@ -280,6 +289,8 @@ func decodePacked(typeStr string, data []byte) (any, error) {
 	}
 }
 
+// isSelectorIsEqual checks whether given selector is equal to given
+// bytecode slice.
 func isSelectorIsEqual(selector [4]byte, data []byte) bool {
 	var i int
 	for i < 4 {
