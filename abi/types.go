@@ -10,8 +10,8 @@ import (
 // minimum and maximum values for a type.
 type paramType struct {
 	ByteLength int      // 0 means there is no length restriction
-	Min        *big.Int // Min value
-	Max        *big.Int // Max value
+	Min        *big.Int // min value
+	Max        *big.Int // max value
 }
 
 // minusTwo big.Int for -2
