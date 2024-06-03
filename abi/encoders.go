@@ -228,7 +228,7 @@ func encodePacked(typeStr string, value any) ([]byte, error) {
 	bytes := make([]byte, 0)
 	switch typeStr {
 	case "address":
-		val, ok := value.(common.Address)
+		val, ok := value.(*common.Address)
 		if !ok {
 			return []byte{}, fmt.Errorf("invalid parameter type: %v, %T", typeStr, value)
 		}

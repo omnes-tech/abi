@@ -6,9 +6,9 @@ import (
 	"math/big"
 )
 
-// ParamType specifies the byte length and
+// paramType specifies the byte length and
 // minimum and maximum values for a type.
-type ParamType struct {
+type paramType struct {
 	ByteLength int // 0 means there is no length restriction
 	Min        *big.Int
 	Max        *big.Int
@@ -34,7 +34,7 @@ var floatTen = big.NewFloat(10)
 
 // validCoreTypes maps type to its byte length and
 // minimum and maximum value restrictions.
-var validCoreTypes = map[string]ParamType{
+var validCoreTypes = map[string]paramType{
 	"uint8":   {1, zero, big.NewInt(255)},
 	"uint16":  {2, zero, big.NewInt(65535)},
 	"uint24":  {3, zero, big.NewInt(16777215)},
