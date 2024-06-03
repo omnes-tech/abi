@@ -9,6 +9,75 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 )
 
+func DecodeWithSelector(selector [4]byte, typeStrs []string, data []byte) ([]any, error) {
+	if !isSelectorIsEqual(selector, data[:4]) {
+		return []any{}, fmt.Errorf("invalid selector")
+	}
+
+	return Decode(typeStrs, data[4:])
+}
+
+func DecodeWithSignature(funcSignature string, data []byte) ([]any, error) {
+	typeStrs, err := getSigTypes(funcSignature)
+	if err != nil {
+		return []any{}, err
+	}
+
+	selector := EncodeSelector(funcSignature)
+	if !isSelectorIsEqual([4]byte(selector), data[:4]) {
+		return []any{}, fmt.Errorf("invalid selector")
+	}
+
+	return Decode(typeStrs, data[4:])
+}
+
+func DecodePacked(typeStrs []string, data []byte) ([]any, error) {
+	var result []any
+	var byteCursor uint64
+	for i, typeStr := range typeStrs {
+		isTypeDynamic := isDynamic(typeStr)
+		isTypeArray, _, err := isArray(typeStr)
+		if err != nil {
+			return []any{}, err
+		}
+
+		if isTypeDynamic && !isTypeArray && i != len(typeStrs)-1 {
+			return []any{}, fmt.Errorf("supports only one dynamic type as last type")
+		}
+
+		if typeStr[:3] == "int" {
+			if len(typeStr) == 3 {
+				typeStr += "256"
+			}
+		} else {
+			if len(typeStr) == 4 {
+				typeStr += "256"
+			}
+		}
+		var byteLength int
+		if !isTypeDynamic {
+			byteLength = VALID_CORE_TYPES[typeStr].ByteLength
+		} else {
+			byteLength = len(data[byteCursor:])
+		}
+
+		val, err := decodePacked(typeStr, data[byteCursor:byteCursor+uint64(byteLength)])
+		if err != nil {
+			return []any{}, err
+		}
+
+		_, ok := val.([]byte)
+		if ok {
+			val = common.Bytes2Hex(val.([]byte))
+		}
+
+		result = append(result, val)
+		byteCursor += uint64(byteLength)
+	}
+
+	return result, nil
+}
+
 func Decode(typeStrs []string, data []byte) ([]any, error) {
 
 	var result []any
@@ -209,4 +278,14 @@ func decodePacked(typeStr string, data []byte) (any, error) {
 			return nil, fmt.Errorf("invalid parameter type: %v", typeStr)
 		}
 	}
+}
+
+func isSelectorIsEqual(selector [4]byte, data []byte) bool {
+	var i int
+	for i < 4 {
+		if selector[i] != data[i] {
+			return false
+		}
+	}
+	return true
 }
