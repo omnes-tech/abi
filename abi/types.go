@@ -133,17 +133,7 @@ func ConvertStringToBigInt(s string) *big.Int {
 	return bigInt
 }
 
-func ConvertStringToBigFloat(s string) *big.Float {
-	bigInt, ok := new(big.Float).SetString(s)
-	if !ok {
-		fmt.Printf("error converting string to big.Int: %v", s)
-		return &big.Float{}
-	}
-
-	return bigInt
-}
-
-func ComputeSignedIntegerBounds(numBits int64) (*big.Int, *big.Int) {
+func computeSignedIntegerBounds(numBits int64) (*big.Int, *big.Int) {
 	resultLowest := new(big.Int)
 	resultLowest.Exp(MINUS_TWO, big.NewInt(numBits-1), nil)
 
@@ -153,15 +143,15 @@ func ComputeSignedIntegerBounds(numBits int64) (*big.Int, *big.Int) {
 	return resultLowest, resultHighest.Sub(resultHighest, ONE)
 }
 
-func ComputeUnsignedIntegerBounds(numBits int64) (*big.Int, *big.Int) {
+func computeUnsignedIntegerBounds(numBits int64) (*big.Int, *big.Int) {
 	result := new(big.Int)
 	result.Exp(TWO, big.NewInt(numBits-1), nil)
 
 	return ZERO, result.Sub(result, ONE)
 }
 
-func ComputeSignedFixedBounds(numbBits int64, fracPlaces float64) (*big.Float, *big.Float) {
-	lowest, highest := ComputeSignedIntegerBounds(numbBits)
+func computeSignedFixedBounds(numbBits int64, fracPlaces float64) (*big.Float, *big.Float) {
+	lowest, highest := computeSignedIntegerBounds(numbBits)
 	floatHighest, _ := highest.Float64()
 	floatLowest, _ := lowest.Float64()
 
@@ -170,8 +160,8 @@ func ComputeSignedFixedBounds(numbBits int64, fracPlaces float64) (*big.Float, *
 	return big.NewFloat(floatLowest * exp), big.NewFloat(floatHighest * exp)
 }
 
-func ComputeUnsignedFixedBounds(numbBits int64, fracPlaces float64) (*big.Float, *big.Float) {
-	_, highest := ComputeUnsignedIntegerBounds(numbBits)
+func computeUnsignedFixedBounds(numbBits int64, fracPlaces float64) (*big.Float, *big.Float) {
+	_, highest := computeUnsignedIntegerBounds(numbBits)
 	floatHighest, _ := highest.Float64()
 
 	return FLOAT_ZERO, big.NewFloat(floatHighest * math.Pow(10, -fracPlaces))

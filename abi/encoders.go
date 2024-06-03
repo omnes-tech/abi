@@ -337,9 +337,9 @@ func encodePacked(typeStr string, value any) ([]byte, error) {
 			var min *big.Float
 			var max *big.Float
 			if typeStr[:5] == "fixed" {
-				min, max = ComputeSignedFixedBounds(int64(bits), float64(fracPlaces))
+				min, max = computeSignedFixedBounds(int64(bits), float64(fracPlaces))
 			} else {
-				min, max = ComputeUnsignedFixedBounds(int64(bits), float64(fracPlaces))
+				min, max = computeUnsignedFixedBounds(int64(bits), float64(fracPlaces))
 			}
 
 			if val.Cmp(min) == -1 || val.Cmp(max) == 1 {
@@ -347,7 +347,7 @@ func encodePacked(typeStr string, value any) ([]byte, error) {
 			}
 
 			scaledValue := new(big.Float)
-			scaledValue.Mul(val, Pow(FLOAT_TEN, uint64(fracPlaces)))
+			scaledValue.Mul(val, pow(FLOAT_TEN, uint64(fracPlaces)))
 			bigIntValue := new(big.Int)
 			scaledValue.Int(bigIntValue)
 
@@ -422,58 +422,20 @@ func joinChunks(headChunks [][]byte, tailChunks [][]byte) []byte {
 	return joined
 }
 
-func Pow(a *big.Float, e uint64) *big.Float {
-	result := Zero().Copy(a)
+func pow(a *big.Float, e uint64) *big.Float {
+	result := zero().Copy(a)
 	for i := uint64(0); i < e-1; i++ {
-		result = Mul(result, a)
+		result = mul(result, a)
 	}
 	return result
 }
 
-func Zero() *big.Float {
+func zero() *big.Float {
 	r := big.NewFloat(0.0)
 	r.SetPrec(256)
 	return r
 }
 
-func Mul(a, b *big.Float) *big.Float {
-	return Zero().Mul(a, b)
-}
-
-func getSigTypes(funcSig string) ([]string, error) {
-	openParIndex := strings.Index(funcSig, "(")
-	if openParIndex == -1 {
-		return []string{}, fmt.Errorf("no opening parenthesis found in function signature")
-	}
-
-	closeParIndex := strings.LastIndex(funcSig, ")")
-	if closeParIndex == -1 {
-		return []string{}, fmt.Errorf("no closing parenthesis found in function signature")
-	}
-
-	return splitParams(funcSig[openParIndex+1 : closeParIndex]), nil
-}
-
-func splitParams(functionSignature string) []string {
-	var result []string
-	var buffer []string
-	insideParentheses := false
-	for _, char := range functionSignature {
-		if string(char) == "(" {
-			insideParentheses = true
-		} else if string(char) == ")" {
-			insideParentheses = false
-		}
-
-		if string(char) == "," && !insideParentheses {
-			result = append(result, strings.Join(buffer, ""))
-			buffer = []string{}
-		} else {
-			buffer = append(buffer, string(char))
-		}
-	}
-
-	result = append(result, strings.Join(buffer, ""))
-
-	return result
+func mul(a, b *big.Float) *big.Float {
+	return zero().Mul(a, b)
 }
