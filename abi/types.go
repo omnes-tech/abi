@@ -9,9 +9,9 @@ import (
 // paramType specifies the byte length and
 // minimum and maximum values for a type.
 type paramType struct {
-	ByteLength int // 0 means there is no length restriction
-	Min        *big.Int
-	Max        *big.Int
+	ByteLength int      // 0 means there is no length restriction
+	Min        *big.Int // Min value
+	Max        *big.Int // Max value
 }
 
 // minusTwo big.Int for -2
