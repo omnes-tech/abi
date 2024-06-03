@@ -61,7 +61,7 @@ func DecodePacked(typeStrs []string, data []byte) ([]any, error) {
 		}
 		var byteLength int
 		if !isTypeDynamic {
-			byteLength = VALID_CORE_TYPES[typeStr].ByteLength
+			byteLength = validCoreTypes[typeStr].ByteLength
 		} else {
 			byteLength = len(data[byteCursor:])
 		}
@@ -99,11 +99,11 @@ func Decode(typeStrs []string, data []byte) ([]any, error) {
 		var end int
 		isTypeDynamic := isDynamic(typeStr)
 		if isTypeDynamic {
-			offset = int(ZERO.SetBytes(data[byteCursor : byteCursor+32]).Uint64())
+			offset = int(zero.SetBytes(data[byteCursor : byteCursor+32]).Uint64())
 
 			var dynamicSize int
 			if !isTypeTuple {
-				dynamicSize = int(ZERO.SetBytes(data[offset : offset+32]).Uint64())
+				dynamicSize = int(zero.SetBytes(data[offset : offset+32]).Uint64())
 			}
 			init = offset
 			end = offset + dynamicSize
@@ -119,7 +119,7 @@ func Decode(typeStrs []string, data []byte) ([]any, error) {
 		}
 		var arraySize int
 		if isTypeArray {
-			arraySize = int(ZERO.SetBytes(data[offset : offset+32]).Uint64())
+			arraySize = int(zero.SetBytes(data[offset : offset+32]).Uint64())
 			if givenArraySize != 0 && givenArraySize != arraySize {
 				return []any{}, fmt.Errorf("array size mismatch")
 			}
@@ -187,14 +187,14 @@ func decodePacked(typeStr string, data []byte) (any, error) {
 
 	switch typeStr {
 	case "address":
-		if len(data) < VALID_CORE_TYPES[typeStr].ByteLength {
+		if len(data) < validCoreTypes[typeStr].ByteLength {
 			return nil, fmt.Errorf("data byte size is too short for %v. Length: %d", typeStr, len(data))
 		}
 
 		return common.BytesToAddress(data), nil
 
 	case "bool":
-		if len(data) < VALID_CORE_TYPES[typeStr].ByteLength {
+		if len(data) < validCoreTypes[typeStr].ByteLength {
 			return nil, fmt.Errorf("data byte size is too short for %v. Length: %d", typeStr, len(data))
 		}
 
@@ -224,7 +224,7 @@ func decodePacked(typeStr string, data []byte) (any, error) {
 				return []byte{}, fmt.Errorf("invalid bits value: %v, bits = %v", typeStr, bits)
 			}
 
-			if len(data) < VALID_CORE_TYPES[typeStr].ByteLength {
+			if len(data) < validCoreTypes[typeStr].ByteLength {
 				return nil, fmt.Errorf("data byte size is too short for %v. Length: %d", typeStr, len(data))
 			}
 
@@ -241,7 +241,7 @@ func decodePacked(typeStr string, data []byte) (any, error) {
 					return []byte{}, fmt.Errorf("invalid byte size: %v", typeStr)
 				}
 
-				if len(data) < VALID_CORE_TYPES[typeStr].ByteLength {
+				if len(data) < validCoreTypes[typeStr].ByteLength {
 					return nil, fmt.Errorf("data byte size is too short for %v. Length: %d", typeStr, len(data))
 				}
 			}

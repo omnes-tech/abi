@@ -14,62 +14,59 @@ type ParamType struct {
 	Max        *big.Int
 }
 
-// MINUS_TWO big.Int for -2
-var MINUS_TWO = big.NewInt(-2)
+// minusTwo big.Int for -2
+var minusTwo = big.NewInt(-2)
 
-// ZERO big.Int for 0
-var ZERO = big.NewInt(0)
+// zero big.Int for 0
+var zero = big.NewInt(0)
 
-// FLOAT_ZERO big.Float for 0
-var FLOAT_ZERO = big.NewFloat(0)
+// floatZero big.Float for 0
+var floatZero = big.NewFloat(0)
 
-// ONE big.Int for 1
-var ONE = big.NewInt(1)
+// one big.Int for 1
+var one = big.NewInt(1)
 
-// TWO big.Int for 2
-var TWO = big.NewInt(2)
+// two big.Int for 2
+var two = big.NewInt(2)
 
-// TEN big.Int for 10
-var TEN = big.NewInt(10)
+// floatTen big.Float for 10
+var floatTen = big.NewFloat(10)
 
-// FLOAT_TEN big.Float for 10
-var FLOAT_TEN = big.NewFloat(10)
-
-// VALID_CORE_TYPES maps type to its byte length and
+// validCoreTypes maps type to its byte length and
 // minimum and maximum value restrictions.
-var VALID_CORE_TYPES = map[string]ParamType{
-	"uint8":   {1, ZERO, big.NewInt(255)},
-	"uint16":  {2, ZERO, big.NewInt(65535)},
-	"uint24":  {3, ZERO, big.NewInt(16777215)},
-	"uint32":  {4, ZERO, big.NewInt(4294967295)},
-	"uint40":  {5, ZERO, big.NewInt(1099511628000)},
-	"uint48":  {6, ZERO, big.NewInt(281474976710655)},
-	"uint56":  {7, ZERO, big.NewInt(72057594037927935)},
-	"uint64":  {8, ZERO, convertStringToBigInt("18446744073709551615")},
-	"uint72":  {9, ZERO, convertStringToBigInt("4722366482869645213695")},
-	"uint80":  {10, ZERO, convertStringToBigInt("1208925819614629174706175")},
-	"uint88":  {11, ZERO, convertStringToBigInt("309485009821345068724781055")},
-	"uint96":  {12, ZERO, convertStringToBigInt("79228162514264337593543950335")},
-	"uint104": {13, ZERO, convertStringToBigInt("20282409603651670423947251286015")},
-	"uint112": {14, ZERO, convertStringToBigInt("5192296858534827628530496329220095")},
-	"uint120": {15, ZERO, convertStringToBigInt("1329227995784915872903807060280344575")},
-	"uint128": {16, ZERO, convertStringToBigInt("340282366920938463463374607431768211455")},
-	"uint136": {17, ZERO, convertStringToBigInt("87112285931760246646623899502532662132735")},
-	"uint144": {18, ZERO, convertStringToBigInt("22300745198530623141535718272648361505980415")},
-	"uint152": {19, ZERO, convertStringToBigInt("5708990770823839524233143877797980545530986495")},
-	"uint160": {20, ZERO, convertStringToBigInt("1461501637330902918203684832716283019655932542975")},
-	"uint168": {21, ZERO, convertStringToBigInt("374144419156711147060143317175368453031918731001855")},
-	"uint176": {22, ZERO, convertStringToBigInt("95780971304118053647396689196894323976171195136475135")},
-	"uint184": {23, ZERO, convertStringToBigInt("24519928653854221733733552434404946937899825954937634815")},
-	"uint192": {24, ZERO, convertStringToBigInt("6277101735386680763835789423207666416102355444464034512895")},
-	"uint200": {25, ZERO, convertStringToBigInt("1606938044258990275541962092341162602522202993782792835301375")},
-	"uint208": {26, ZERO, convertStringToBigInt("411376139330301510538742295639337626245683966408394965837152255")},
-	"uint216": {27, ZERO, convertStringToBigInt("105312291668557186697918027683670432318895095400549111254310977535")},
-	"uint224": {28, ZERO, convertStringToBigInt("26959946667150639794667015087019630673637144422540572481103610249215")},
-	"uint232": {29, ZERO, convertStringToBigInt("6901746346790563787434755862277025452451108972170386555162524223799295")},
-	"uint240": {30, ZERO, convertStringToBigInt("1766847064778384329583297500742918515827483896875618958121606201292619775")},
-	"uint248": {31, ZERO, convertStringToBigInt("452312848583266388373324160190187140051835877600158453279131187530910662655")},
-	"uint256": {32, ZERO, convertStringToBigInt("115792089237316195423570985008687907853269984665640564039457584007913129639935")},
+var validCoreTypes = map[string]ParamType{
+	"uint8":   {1, zero, big.NewInt(255)},
+	"uint16":  {2, zero, big.NewInt(65535)},
+	"uint24":  {3, zero, big.NewInt(16777215)},
+	"uint32":  {4, zero, big.NewInt(4294967295)},
+	"uint40":  {5, zero, big.NewInt(1099511628000)},
+	"uint48":  {6, zero, big.NewInt(281474976710655)},
+	"uint56":  {7, zero, big.NewInt(72057594037927935)},
+	"uint64":  {8, zero, convertStringToBigInt("18446744073709551615")},
+	"uint72":  {9, zero, convertStringToBigInt("4722366482869645213695")},
+	"uint80":  {10, zero, convertStringToBigInt("1208925819614629174706175")},
+	"uint88":  {11, zero, convertStringToBigInt("309485009821345068724781055")},
+	"uint96":  {12, zero, convertStringToBigInt("79228162514264337593543950335")},
+	"uint104": {13, zero, convertStringToBigInt("20282409603651670423947251286015")},
+	"uint112": {14, zero, convertStringToBigInt("5192296858534827628530496329220095")},
+	"uint120": {15, zero, convertStringToBigInt("1329227995784915872903807060280344575")},
+	"uint128": {16, zero, convertStringToBigInt("340282366920938463463374607431768211455")},
+	"uint136": {17, zero, convertStringToBigInt("87112285931760246646623899502532662132735")},
+	"uint144": {18, zero, convertStringToBigInt("22300745198530623141535718272648361505980415")},
+	"uint152": {19, zero, convertStringToBigInt("5708990770823839524233143877797980545530986495")},
+	"uint160": {20, zero, convertStringToBigInt("1461501637330902918203684832716283019655932542975")},
+	"uint168": {21, zero, convertStringToBigInt("374144419156711147060143317175368453031918731001855")},
+	"uint176": {22, zero, convertStringToBigInt("95780971304118053647396689196894323976171195136475135")},
+	"uint184": {23, zero, convertStringToBigInt("24519928653854221733733552434404946937899825954937634815")},
+	"uint192": {24, zero, convertStringToBigInt("6277101735386680763835789423207666416102355444464034512895")},
+	"uint200": {25, zero, convertStringToBigInt("1606938044258990275541962092341162602522202993782792835301375")},
+	"uint208": {26, zero, convertStringToBigInt("411376139330301510538742295639337626245683966408394965837152255")},
+	"uint216": {27, zero, convertStringToBigInt("105312291668557186697918027683670432318895095400549111254310977535")},
+	"uint224": {28, zero, convertStringToBigInt("26959946667150639794667015087019630673637144422540572481103610249215")},
+	"uint232": {29, zero, convertStringToBigInt("6901746346790563787434755862277025452451108972170386555162524223799295")},
+	"uint240": {30, zero, convertStringToBigInt("1766847064778384329583297500742918515827483896875618958121606201292619775")},
+	"uint248": {31, zero, convertStringToBigInt("452312848583266388373324160190187140051835877600158453279131187530910662655")},
+	"uint256": {32, zero, convertStringToBigInt("115792089237316195423570985008687907853269984665640564039457584007913129639935")},
 	"int8":    {1, big.NewInt(-128), big.NewInt(127)},
 	"int16":   {2, big.NewInt(-32768), big.NewInt(32767)},
 	"int24":   {3, big.NewInt(-8388608), big.NewInt(8388607)},
@@ -102,42 +99,42 @@ var VALID_CORE_TYPES = map[string]ParamType{
 	"int240":  {30, convertStringToBigInt("-883423532389192164791648750371459257913741948437809479060803100646309888"), convertStringToBigInt("883423532389192164791648750371459257913741948437809479060803100646309887")},
 	"int248":  {31, convertStringToBigInt("-226156424291633194186662080095093570025917938800079226639565593765455331328"), convertStringToBigInt("226156424291633194186662080095093570025917938800079226639565593765455331327")},
 	"int256":  {32, convertStringToBigInt("-57896044618658097711785492504343953926634992332820282019728792003956564819968"), convertStringToBigInt("57896044618658097711785492504343953926634992332820282019728792003956564819967")},
-	"bytes1":  {1, ZERO, ZERO},
-	"bytes2":  {2, ZERO, ZERO},
-	"bytes3":  {3, ZERO, ZERO},
-	"bytes4":  {4, ZERO, ZERO},
-	"bytes5":  {5, ZERO, ZERO},
-	"bytes6":  {6, ZERO, ZERO},
-	"bytes7":  {7, ZERO, ZERO},
-	"bytes8":  {8, ZERO, ZERO},
-	"bytes9":  {9, ZERO, ZERO},
-	"bytes10": {10, ZERO, ZERO},
-	"bytes11": {11, ZERO, ZERO},
-	"bytes12": {12, ZERO, ZERO},
-	"bytes13": {13, ZERO, ZERO},
-	"bytes14": {14, ZERO, ZERO},
-	"bytes15": {15, ZERO, ZERO},
-	"bytes16": {16, ZERO, ZERO},
-	"bytes17": {17, ZERO, ZERO},
-	"bytes18": {18, ZERO, ZERO},
-	"bytes19": {19, ZERO, ZERO},
-	"bytes20": {20, ZERO, ZERO},
-	"bytes21": {21, ZERO, ZERO},
-	"bytes22": {22, ZERO, ZERO},
-	"bytes23": {23, ZERO, ZERO},
-	"bytes24": {24, ZERO, ZERO},
-	"bytes25": {25, ZERO, ZERO},
-	"bytes26": {26, ZERO, ZERO},
-	"bytes27": {27, ZERO, ZERO},
-	"bytes28": {28, ZERO, ZERO},
-	"bytes29": {29, ZERO, ZERO},
-	"bytes30": {30, ZERO, ZERO},
-	"bytes31": {31, ZERO, ZERO},
-	"bytes32": {32, ZERO, ZERO},
-	"bytes":   {0, ZERO, ZERO},
-	"string":  {0, ZERO, ZERO},
-	"bool":    {1, ZERO, ONE},
-	"address": {20, ZERO, ZERO},
+	"bytes1":  {1, zero, zero},
+	"bytes2":  {2, zero, zero},
+	"bytes3":  {3, zero, zero},
+	"bytes4":  {4, zero, zero},
+	"bytes5":  {5, zero, zero},
+	"bytes6":  {6, zero, zero},
+	"bytes7":  {7, zero, zero},
+	"bytes8":  {8, zero, zero},
+	"bytes9":  {9, zero, zero},
+	"bytes10": {10, zero, zero},
+	"bytes11": {11, zero, zero},
+	"bytes12": {12, zero, zero},
+	"bytes13": {13, zero, zero},
+	"bytes14": {14, zero, zero},
+	"bytes15": {15, zero, zero},
+	"bytes16": {16, zero, zero},
+	"bytes17": {17, zero, zero},
+	"bytes18": {18, zero, zero},
+	"bytes19": {19, zero, zero},
+	"bytes20": {20, zero, zero},
+	"bytes21": {21, zero, zero},
+	"bytes22": {22, zero, zero},
+	"bytes23": {23, zero, zero},
+	"bytes24": {24, zero, zero},
+	"bytes25": {25, zero, zero},
+	"bytes26": {26, zero, zero},
+	"bytes27": {27, zero, zero},
+	"bytes28": {28, zero, zero},
+	"bytes29": {29, zero, zero},
+	"bytes30": {30, zero, zero},
+	"bytes31": {31, zero, zero},
+	"bytes32": {32, zero, zero},
+	"bytes":   {0, zero, zero},
+	"string":  {0, zero, zero},
+	"bool":    {1, zero, one},
+	"address": {20, zero, zero},
 }
 
 // convertStringToBigInt converts string to big.Int value.
@@ -155,21 +152,21 @@ func convertStringToBigInt(s string) *big.Int {
 // for signed integer based on its bits number.
 func computeSignedIntegerBounds(numBits int64) (*big.Int, *big.Int) {
 	resultLowest := new(big.Int)
-	resultLowest.Exp(MINUS_TWO, big.NewInt(numBits-1), nil)
+	resultLowest.Exp(minusTwo, big.NewInt(numBits-1), nil)
 
 	resultHighest := new(big.Int)
-	resultHighest.Exp(TWO, big.NewInt(numBits-1), nil)
+	resultHighest.Exp(two, big.NewInt(numBits-1), nil)
 
-	return resultLowest, resultHighest.Sub(resultHighest, ONE)
+	return resultLowest, resultHighest.Sub(resultHighest, one)
 }
 
 // computeUnsignedIntegerBounds computes the bound range
 // for unsigned integer based on its bits number.
 func computeUnsignedIntegerBounds(numBits int64) (*big.Int, *big.Int) {
 	result := new(big.Int)
-	result.Exp(TWO, big.NewInt(numBits-1), nil)
+	result.Exp(two, big.NewInt(numBits-1), nil)
 
-	return ZERO, result.Sub(result, ONE)
+	return zero, result.Sub(result, one)
 }
 
 // computeSignedFixedBounds computes the bound range
@@ -192,5 +189,5 @@ func computeUnsignedFixedBounds(numbBits int64, fracPlaces float64) (*big.Float,
 	_, highest := computeUnsignedIntegerBounds(numbBits)
 	floatHighest, _ := highest.Float64()
 
-	return FLOAT_ZERO, big.NewFloat(floatHighest * math.Pow(10, -fracPlaces))
+	return floatZero, big.NewFloat(floatHighest * math.Pow(10, -fracPlaces))
 }

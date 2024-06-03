@@ -277,7 +277,7 @@ func encodePacked(typeStr string, value any) ([]byte, error) {
 				return []byte{}, fmt.Errorf("invalid bits value: %v, bits = %v", typeStr, bits)
 			}
 
-			if val.Cmp(VALID_CORE_TYPES[typeStr].Max) == 1 || val.Cmp(VALID_CORE_TYPES[typeStr].Min) == -1 {
+			if val.Cmp(validCoreTypes[typeStr].Max) == 1 || val.Cmp(validCoreTypes[typeStr].Min) == -1 {
 				return []byte{}, fmt.Errorf("value out of allowed range: %v, %v", typeStr, val)
 			}
 
@@ -356,7 +356,7 @@ func encodePacked(typeStr string, value any) ([]byte, error) {
 			}
 
 			scaledValue := new(big.Float)
-			scaledValue.Mul(val, pow(FLOAT_TEN, uint64(fracPlaces)))
+			scaledValue.Mul(val, pow(floatTen, uint64(fracPlaces)))
 			bigIntValue := new(big.Int)
 			scaledValue.Int(bigIntValue)
 
@@ -438,15 +438,15 @@ func joinChunks(headChunks [][]byte, tailChunks [][]byte) []byte {
 
 // pow performs exponentiation for big.Float number.
 func pow(a *big.Float, e uint64) *big.Float {
-	result := zero().Copy(a)
+	result := zeroFloat().Copy(a)
 	for i := uint64(0); i < e-1; i++ {
 		result = mul(result, a)
 	}
 	return result
 }
 
-// zero returns 0 in big.Float type.
-func zero() *big.Float {
+// zeroFloat returns 0 in big.Float type.
+func zeroFloat() *big.Float {
 	r := big.NewFloat(0.0)
 	r.SetPrec(256)
 	return r
@@ -454,5 +454,5 @@ func zero() *big.Float {
 
 // mul multiplies two big.Float arguments
 func mul(a, b *big.Float) *big.Float {
-	return zero().Mul(a, b)
+	return zeroFloat().Mul(a, b)
 }
