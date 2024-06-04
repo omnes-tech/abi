@@ -121,7 +121,7 @@ func Encode(typeStrs []string, values ...any) ([]byte, error) {
 			}
 		}
 
-		if !isDynamic(typeStr) {
+		if !isDynamic(typeStr, isTypeTuple) {
 			rawHeadChunks = append(rawHeadChunks, encoded)
 			tailChunks = append(tailChunks, nil)
 		} else {

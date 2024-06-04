@@ -8,11 +8,12 @@ import (
 
 // isDynamic checks whether given type string is a dynamic,
 // i.e. if it is either a string, bytes, or an array.
-func isDynamic(typeStr string) bool {
+func isDynamic(typeStr string, isTuple bool) bool {
 
 	if strings.Contains(typeStr, "[") ||
 		strings.Contains(typeStr, "string") ||
-		strings.Contains(typeStr, "bytes") {
+		typeStr == "bytes" ||
+		(isTuple && (strings.Contains(typeStr, "bytes,") || strings.Contains(typeStr, "bytes)"))) {
 		return true
 	}
 

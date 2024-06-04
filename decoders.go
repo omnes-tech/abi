@@ -40,7 +40,7 @@ func DecodePacked(typeStrs []string, data []byte) ([]any, error) {
 	var result []any
 	var byteCursor uint64
 	for i, typeStr := range typeStrs {
-		isTypeDynamic := isDynamic(typeStr)
+		isTypeDynamic := isDynamic(typeStr, false)
 		isTypeArray, _, err := isArray(typeStr)
 		if err != nil {
 			return []any{}, err
@@ -97,7 +97,7 @@ func Decode(typeStrs []string, data []byte) ([]any, error) {
 		var offset int
 		var init int
 		var end int
-		isTypeDynamic := isDynamic(typeStr)
+		isTypeDynamic := isDynamic(typeStr, isTypeTuple)
 		if isTypeDynamic {
 			offset = int(zero.SetBytes(data[byteCursor : byteCursor+32]).Uint64())
 
