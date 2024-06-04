@@ -11,7 +11,7 @@ import (
 )
 
 // EncodeWithSelector encodes function call based on its selector.
-func EncodeWithSelector(selector [4]byte, typeStrs []string, params ...any) ([]byte, error) {
+func EncodeWithSelector(selector []byte, typeStrs []string, params ...any) ([]byte, error) {
 
 	if len(typeStrs) != len(params) {
 		return []byte{}, fmt.Errorf("number of parameter types and given paramenters mismatch")
@@ -94,7 +94,7 @@ func Encode(typeStrs []string, values ...any) ([]byte, error) {
 			if arraySize != 0 && len(values[i].([]any)) != arraySize {
 				return nil, fmt.Errorf("array size mismatch")
 			}
-			openBracketIndex := strings.Index(typeStr, "[")
+			openBracketIndex := strings.LastIndex(typeStr, "[")
 
 			var arrayTypes []string
 			arrayValues := values[i].([]any)
@@ -167,7 +167,7 @@ func EncodePacked(typeStrs []string, values ...any) ([]byte, error) {
 			if arraySize != 0 && len(values[i].([]any)) != arraySize {
 				return nil, fmt.Errorf("array size mismatch")
 			}
-			openBracketIndex := strings.Index(typeStr, "[")
+			openBracketIndex := strings.LastIndex(typeStr, "[")
 
 			var arrayTypes []string
 			arrayValues := values[i].([]any)

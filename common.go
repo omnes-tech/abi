@@ -30,8 +30,13 @@ func isArray(typeStr string) (bool, int, error) {
 	}
 
 	if strings.Count(typeStr, "[") > 0 {
-		openBracketIndex := strings.Index(typeStr, "[")
-		closeBracketIndex := strings.Index(typeStr, "[")
+		openBracketIndex := strings.LastIndex(typeStr, "[")
+		closeBracketIndex := strings.LastIndex(typeStr, "]")
+		closeParenthesisIndex := strings.LastIndex(typeStr, ")")
+
+		if openBracketIndex < closeParenthesisIndex || closeBracketIndex < closeParenthesisIndex {
+			return false, 0, nil
+		}
 
 		var arraySize int
 		var err error

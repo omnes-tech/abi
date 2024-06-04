@@ -10,7 +10,7 @@ import (
 )
 
 // DecodeWithSelector decodes bytecode restricted to given selector.
-func DecodeWithSelector(selector [4]byte, typeStrs []string, data []byte) ([]any, error) {
+func DecodeWithSelector(selector []byte, typeStrs []string, data []byte) ([]any, error) {
 	if !isSelectorIsEqual(selector, data[:4]) {
 		return []any{}, fmt.Errorf("invalid selector")
 	}
@@ -26,7 +26,7 @@ func DecodeWithSignature(funcSignature string, data []byte) ([]any, error) {
 	}
 
 	selector := EncodeSignature(funcSignature)
-	if !isSelectorIsEqual([4]byte(selector), data[:4]) {
+	if !isSelectorIsEqual(selector, data[:4]) {
 		return []any{}, fmt.Errorf("invalid selector")
 	}
 
@@ -123,7 +123,7 @@ func Decode(typeStrs []string, data []byte) ([]any, error) {
 			if givenArraySize != 0 && givenArraySize != arraySize {
 				return []any{}, fmt.Errorf("array size mismatch")
 			}
-			typeStr = typeStr[:strings.Index(typeStr, "[")]
+			typeStr = typeStr[:strings.LastIndex(typeStr, "[")]
 
 			var arrayTypeStrs []string
 			for j := 0; j < arraySize; j++ {
@@ -291,9 +291,8 @@ func decodePacked(typeStr string, data []byte) (any, error) {
 
 // isSelectorIsEqual checks whether given selector is equal to given
 // bytecode slice.
-func isSelectorIsEqual(selector [4]byte, data []byte) bool {
-	var i int
-	for i < 4 {
+func isSelectorIsEqual(selector []byte, data []byte) bool {
+	for i := 0; i < len(selector); i++ {
 		if selector[i] != data[i] {
 			return false
 		}
