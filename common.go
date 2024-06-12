@@ -6,9 +6,9 @@ import (
 	"strings"
 )
 
-// isDynamic checks whether given type string is a dynamic,
+// IsDynamic checks whether given type string is a dynamic,
 // i.e. if it is either a string, bytes, or an array.
-func isDynamic(typeStr string, isTuple bool) bool {
+func IsDynamic(typeStr string, isTuple bool) bool {
 
 	if strings.Contains(typeStr, "[") ||
 		strings.Contains(typeStr, "string") ||
@@ -20,12 +20,12 @@ func isDynamic(typeStr string, isTuple bool) bool {
 	return false
 }
 
-// isArray checks whether given type string is an array.
+// IsArray checks whether given type string is an array.
 // Returns whether or not it is an array and the array length
 // for bounded arrays (i.e. `uint256[3]`). Array length can
 // be 0 wheter an error occured, it is not an array,
 // or it is an unbounded array (i.e. `uint256[]`).
-func isArray(typeStr string) (bool, int, error) {
+func IsArray(typeStr string) (bool, int, error) {
 	if strings.Count(typeStr, "[") != strings.Count(typeStr, "]") {
 		return false, 0, fmt.Errorf("invalid array definition")
 	}
@@ -54,9 +54,9 @@ func isArray(typeStr string) (bool, int, error) {
 	return false, 0, nil
 }
 
-// isTuple checks whether given type string is a tuple (i.e. `(uint256,bytes,address)`).
+// IsTuple checks whether given type string is a tuple (i.e. `(uint256,bytes,address)`).
 // Also returns the array of type strings in the tuple (i.e. [uint256,bytes,address]).
-func isTuple(typeStr string) (bool, []string, error) {
+func IsTuple(typeStr string) (bool, []string, error) {
 	if strings.Count(typeStr, "(") != strings.Count(typeStr, ")") {
 		return false, nil, fmt.Errorf("invalid tuple definition")
 	}

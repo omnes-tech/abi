@@ -80,12 +80,12 @@ func Encode(typeStrs []string, values ...any) ([]byte, error) {
 	for i, typeStr := range typeStrs {
 		var encoded []byte
 
-		isTypeTuple, splitedTypes, err := isTuple(typeStr)
+		isTypeTuple, splitedTypes, err := IsTuple(typeStr)
 		if err != nil {
 			return []byte{}, err
 		}
 
-		isTypeArray, arraySize, err := isArray(typeStr)
+		isTypeArray, arraySize, err := IsArray(typeStr)
 		if err != nil {
 			return []byte{}, err
 		}
@@ -121,7 +121,7 @@ func Encode(typeStrs []string, values ...any) ([]byte, error) {
 			}
 		}
 
-		if !isDynamic(typeStr, isTypeTuple) {
+		if !IsDynamic(typeStr, isTypeTuple) {
 			rawHeadChunks = append(rawHeadChunks, encoded)
 			tailChunks = append(tailChunks, nil)
 		} else {
@@ -153,12 +153,12 @@ func EncodePacked(typeStrs []string, values ...any) ([]byte, error) {
 	for i, typeStr := range typeStrs {
 		var encoded []byte
 
-		isTypeTuple, splitedTypes, err := isTuple(typeStr)
+		isTypeTuple, splitedTypes, err := IsTuple(typeStr)
 		if err != nil {
 			return []byte{}, err
 		}
 
-		isTypeArray, arraySize, err := isArray(typeStr)
+		isTypeArray, arraySize, err := IsArray(typeStr)
 		if err != nil {
 			return []byte{}, err
 		}
