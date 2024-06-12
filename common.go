@@ -73,10 +73,10 @@ func isTuple(typeStr string) (bool, []string, error) {
 	return false, nil, nil
 }
 
-// getSigTypes gets the input parameters type from given function
+// GetSigTypes gets the input parameters type from given function
 // signature.
 // Calls splitParams function.
-func getSigTypes(funcSig string) ([]string, error) {
+func GetSigTypes(funcSig string) ([]string, error) {
 	openParIndex := strings.Index(funcSig, "(")
 	if openParIndex == -1 {
 		return []string{}, fmt.Errorf("no opening parenthesis found in function signature")
@@ -87,15 +87,15 @@ func getSigTypes(funcSig string) ([]string, error) {
 		return []string{}, fmt.Errorf("no closing parenthesis found in function signature")
 	}
 
-	return splitParams(funcSig[openParIndex+1 : closeParIndex]), nil
+	return SplitParams(funcSig[openParIndex+1 : closeParIndex]), nil
 }
 
-// splitParams splits parameters type from given function signature
-func splitParams(functionSignature string) []string {
+// SplitParams splits parameters type from given type string
+func SplitParams(typesStr string) []string {
 	var result []string
 	var buffer []string
 	insideParentheses := false
-	for _, char := range functionSignature {
+	for _, char := range typesStr {
 		if string(char) == "(" {
 			insideParentheses = true
 		} else if string(char) == ")" {

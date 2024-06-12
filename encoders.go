@@ -38,7 +38,7 @@ func EncodeWithSignature(funcSignature string, params ...any) ([]byte, error) {
 	}
 
 	selector := EncodeSignature(funcSignature)
-	paramTypes, err := getSigTypes(funcSignature)
+	paramTypes, err := GetSigTypes(funcSignature)
 	if err != nil {
 		return []byte{}, err
 	}

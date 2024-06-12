@@ -20,7 +20,7 @@ func DecodeWithSelector(selector []byte, typeStrs []string, data []byte) ([]any,
 
 // DecodeWithSignature decodes bytecode based on given signature.
 func DecodeWithSignature(funcSignature string, data []byte) ([]any, error) {
-	typeStrs, err := getSigTypes(funcSignature)
+	typeStrs, err := GetSigTypes(funcSignature)
 	if err != nil {
 		return []any{}, err
 	}
@@ -191,7 +191,7 @@ func decodePacked(typeStr string, data []byte) (any, error) {
 			return nil, fmt.Errorf("data byte size is too short for %v. Length: %d", typeStr, len(data))
 		}
 
-		return common.BytesToAddress(data), nil
+		return common.BytesToAddress(data).Hex(), nil
 
 	case "bool":
 		if len(data) < validCoreTypes[typeStr].ByteLength {
