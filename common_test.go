@@ -19,10 +19,10 @@ func ExampleGetSigTypes() {
 }
 
 func ExampleSplitParams() {
-	typesStr := "(address, uint256, bytes)[], uint256, string, bool"
+	typesStr := "(address, uint256, bytes)[], uint256, string, bool, address"
 	splittedTypes := abi.SplitParams(typesStr)
 
 	fmt.Println(splittedTypes)
 
-	// Output: [(address, uint256, bytes)[]  uint256  string  bool]
+	// Output: [(address, uint256, bytes)[]  uint256  string  bool  address]
 }
