@@ -198,7 +198,7 @@ func decodePacked(typeStr string, data []byte) (any, error) {
 			return nil, fmt.Errorf("data byte size is too short for %v. Length: %d", typeStr, len(data))
 		}
 
-		return data[0] == 1, nil
+		return data[len(data)-1] == 1, nil
 	case "string": // @follow-up check this later
 		return string(data), nil
 	default:
