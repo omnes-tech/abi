@@ -92,6 +92,11 @@ func GetSigTypes(funcSig string) ([]string, error) {
 
 // SplitParams splits parameters type from given type string
 func SplitParams(typesStr string) []string {
+
+	if len(typesStr) == 0 {
+		return nil
+	}
+
 	var result []string
 	var buffer []string
 	insideParentheses := false
@@ -108,6 +113,10 @@ func SplitParams(typesStr string) []string {
 		} else {
 			buffer = append(buffer, string(char))
 		}
+	}
+
+	if len(result) == 0 {
+		return nil
 	}
 
 	result = append(result, strings.Join(buffer, ""))
