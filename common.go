@@ -115,10 +115,6 @@ func SplitParams(typesStr string) []string {
 		}
 	}
 
-	if len(result) == 0 {
-		return nil
-	}
-
 	result = append(result, strings.Join(buffer, ""))
 
 	return result
