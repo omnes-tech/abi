@@ -278,6 +278,9 @@ func encodePacked(typeStr string, value any) ([]byte, error) {
 			}
 
 			if val.Cmp(validCoreTypes[typeStr].Max) == 1 || val.Cmp(validCoreTypes[typeStr].Min) == -1 {
+				fmt.Println(val)
+				fmt.Println(validCoreTypes[typeStr].Max)
+				fmt.Println(validCoreTypes[typeStr].Min)
 				return []byte{}, fmt.Errorf("value out of allowed range: %v, %v", typeStr, val)
 			}
 

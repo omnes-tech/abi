@@ -99,11 +99,11 @@ func Decode(typeStrs []string, data []byte) ([]any, error) {
 		var end int
 		isTypeDynamic := IsDynamic(typeStr, isTypeTuple)
 		if isTypeDynamic {
-			offset = int(zero.SetBytes(data[byteCursor : byteCursor+32]).Uint64())
+			offset = int(bigInt.SetBytes(data[byteCursor : byteCursor+32]).Uint64())
 
 			var dynamicSize int
 			if !isTypeTuple {
-				dynamicSize = int(zero.SetBytes(data[offset : offset+32]).Uint64())
+				dynamicSize = int(bigInt.SetBytes(data[offset : offset+32]).Uint64())
 			}
 			init = offset
 			end = offset + dynamicSize
@@ -119,7 +119,7 @@ func Decode(typeStrs []string, data []byte) ([]any, error) {
 		}
 		var arraySize int
 		if isTypeArray {
-			arraySize = int(zero.SetBytes(data[offset : offset+32]).Uint64())
+			arraySize = int(bigInt.SetBytes(data[offset : offset+32]).Uint64())
 			if givenArraySize != 0 && givenArraySize != arraySize {
 				return []any{}, fmt.Errorf("array size mismatch")
 			}
