@@ -214,7 +214,7 @@ func encode(typeStr string, value any) ([]byte, error) {
 
 		encoded = append(bytesLength, encoded...)
 
-	} else if typeStr[:5] == "bytes" {
+	} else if len(typeStr) > 5 && typeStr[:5] == "bytes" {
 		encoded = common.RightPadBytes(encoded[:], 32)
 	} else {
 		encoded = common.LeftPadBytes(encoded[:], 32)
