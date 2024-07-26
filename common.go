@@ -64,8 +64,21 @@ func IsTuple(typeStr string) (bool, []string, error) {
 	if strings.Count(typeStr, "(") > 0 {
 		openParenthesisIndex := strings.Index(typeStr, "(")
 		closeParenthesisIndex := strings.LastIndex(typeStr, ")")
+		innerCloseParenthesisIndex := strings.LastIndex(typeStr[:closeParenthesisIndex], ")")
+		innerCloseBracketsIndex := strings.LastIndex(typeStr[:closeParenthesisIndex], "]")
 
-		splitTypes := strings.Split(typeStr[openParenthesisIndex+1:closeParenthesisIndex], ",")
+		var splitTypes []string
+		if innerCloseParenthesisIndex != -1 || innerCloseBracketsIndex != -1 {
+			if innerCloseParenthesisIndex > innerCloseBracketsIndex {
+				splitTypes = []string{typeStr[openParenthesisIndex+1 : innerCloseParenthesisIndex+1]}
+				splitTypes = append(splitTypes, strings.Split(typeStr[innerCloseParenthesisIndex+2:closeParenthesisIndex], ",")...)
+			} else {
+				splitTypes = []string{typeStr[openParenthesisIndex+1 : innerCloseBracketsIndex+1]}
+				splitTypes = append(splitTypes, strings.Split(typeStr[innerCloseBracketsIndex+2:closeParenthesisIndex], ",")...)
+			}
+		} else {
+			splitTypes = strings.Split(typeStr[openParenthesisIndex+1:closeParenthesisIndex], ",")
+		}
 
 		return true, splitTypes, nil
 	}
@@ -99,15 +112,15 @@ func SplitParams(typesStr string) []string {
 
 	var result []string
 	var buffer []string
-	insideParentheses := false
+	insideParentheses := 0
 	for _, char := range typesStr {
 		if string(char) == "(" {
-			insideParentheses = true
+			insideParentheses += 1
 		} else if string(char) == ")" {
-			insideParentheses = false
+			insideParentheses -= 1
 		}
 
-		if string(char) == "," && !insideParentheses {
+		if string(char) == "," && insideParentheses <= 0 {
 			result = append(result, strings.Join(buffer, ""))
 			buffer = []string{}
 		} else {

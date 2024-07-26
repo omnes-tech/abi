@@ -97,7 +97,12 @@ func Encode(typeStrs []string, values ...any) ([]byte, error) {
 			openBracketIndex := strings.LastIndex(typeStr, "[")
 
 			var arrayTypes []string
-			arrayValues := values[i].([]any)
+			var arrayValues []any
+			var ok bool
+			arrayValues, ok = values[i].([]any)
+			if !ok {
+				arrayValues = toAnyArray(values[i])
+			}
 			for j := 0; j < len(arrayValues); j++ {
 				arrayTypes = append(arrayTypes, typeStr[:openBracketIndex])
 			}
@@ -280,9 +285,6 @@ func encodePacked(typeStr string, value any) ([]byte, error) {
 			}
 
 			if val.Cmp(validCoreTypes[typeStr].Max) == 1 || val.Cmp(validCoreTypes[typeStr].Min) == -1 {
-				fmt.Println(val)
-				fmt.Println(validCoreTypes[typeStr].Max)
-				fmt.Println(validCoreTypes[typeStr].Min)
 				return []byte{}, fmt.Errorf("value out of allowed range: %v, %v", typeStr, val)
 			}
 
@@ -460,4 +462,11 @@ func zeroFloat() *big.Float {
 // mul multiplies two big.Float arguments
 func mul(a, b *big.Float) *big.Float {
 	return zeroFloat().Mul(a, b)
+}
+
+func toAnyArray(inputs ...any) []any {
+	var output []any
+	output = append(output, inputs...)
+
+	return output
 }
