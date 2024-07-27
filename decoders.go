@@ -89,6 +89,7 @@ func Decode(typeStrs []string, data []byte) ([]any, error) {
 	var result []any
 	var byteCursor uint64
 	for _, typeStr := range typeStrs {
+
 		isTypeTuple, splitedTypes, err := IsTuple(typeStr)
 		if err != nil {
 			return []any{}, err
