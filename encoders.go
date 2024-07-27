@@ -98,8 +98,7 @@ func Encode(typeStrs []string, values ...any) ([]byte, error) {
 
 			var arrayTypes []string
 			var arrayValues []any
-			var ok bool
-			arrayValues, ok = values[i].([]any)
+			arrayValues, ok := values[i].([]any)
 			if !ok {
 				arrayValues = toAnyArray(values[i])
 			}
@@ -464,9 +463,21 @@ func mul(a, b *big.Float) *big.Float {
 	return zeroFloat().Mul(a, b)
 }
 
-func toAnyArray(inputs ...any) []any {
-	var output []any
-	output = append(output, inputs...)
+func toAnyArray(input any) []any {
+	var result []interface{}
 
-	return output
+	switch v := input.(type) {
+	case []string:
+		for _, s := range v {
+			result = append(result, s)
+		}
+	case [][]byte:
+		for _, b := range v {
+			result = append(result, b)
+		}
+	default:
+		fmt.Println("Unsupported input type")
+	}
+
+	return result
 }
