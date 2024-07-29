@@ -70,14 +70,14 @@ func IsTuple(typeStr string) (bool, []string, error) {
 		var splitTypes []string
 		if innerCloseParenthesisIndex != -1 &&
 			innerCloseBracketsIndex != -1 {
-			innerOpenParenthesisIndex := strings.Index(typeStr[openParenthesisIndex+1:closeParenthesisIndex], "(")
+			innerOpenParenthesisIndex := strings.Index(typeStr[openParenthesisIndex+1:closeParenthesisIndex], "(") + len(typeStr[:openParenthesisIndex]) + 1
 			if innerCloseParenthesisIndex > innerCloseBracketsIndex {
 				splitTypes = strings.Split(typeStr[openParenthesisIndex+1:innerOpenParenthesisIndex], ",")
 				splitTypes = append(splitTypes, typeStr[innerOpenParenthesisIndex:innerCloseParenthesisIndex+1])
 				splitTypes = append(splitTypes, strings.Split(typeStr[innerCloseParenthesisIndex+2:closeParenthesisIndex], ",")...)
 			} else {
 				splitTypes = strings.Split(typeStr[openParenthesisIndex+1:innerOpenParenthesisIndex], ",")
-				splitTypes = append(splitTypes, typeStr[innerOpenParenthesisIndex+1:innerCloseBracketsIndex+1])
+				splitTypes = append(splitTypes, typeStr[innerOpenParenthesisIndex:innerCloseBracketsIndex+1])
 				splitTypes = append(splitTypes, strings.Split(typeStr[innerCloseBracketsIndex+2:closeParenthesisIndex], ",")...)
 			}
 		} else {

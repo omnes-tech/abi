@@ -72,7 +72,13 @@ func EncodeSignature(funcSignature string) []byte {
 // Encode encodes given arguments based on provided types.
 func Encode(typeStrs []string, values ...any) ([]byte, error) {
 	if len(typeStrs) != len(values) {
-		return []byte{}, fmt.Errorf("typeStrs and values must have the same length. typeStrs: %v, values: %v", typeStrs, values)
+		return []byte{}, fmt.Errorf(
+			"typeStrs and values must have the same length. typeStrs: %v (length %v), values: %v (length %v)",
+			typeStrs,
+			len(typeStrs),
+			values,
+			len(values),
+		)
 	}
 
 	var rawHeadChunks [][]byte
@@ -150,7 +156,12 @@ func Encode(typeStrs []string, values ...any) ([]byte, error) {
 // with packed encoding.
 func EncodePacked(typeStrs []string, values ...any) ([]byte, error) {
 	if len(typeStrs) != len(values) {
-		return []byte{}, fmt.Errorf("typeStrs and values must have the same length. typeStrs: %v, values: %v", typeStrs, values)
+		return []byte{}, fmt.Errorf("typeStrs and values must have the same length. typeStrs: %v (length %v), values: %v (length %v)",
+			typeStrs,
+			len(typeStrs),
+			values,
+			len(values),
+		)
 	}
 
 	var result []byte
