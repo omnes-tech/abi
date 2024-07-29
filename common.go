@@ -84,6 +84,8 @@ func IsTuple(typeStr string) (bool, []string, error) {
 			splitTypes = strings.Split(typeStr[openParenthesisIndex+1:closeParenthesisIndex], ",")
 		}
 
+		splitTypes = cleanSplitTypes(splitTypes)
+
 		return true, splitTypes, nil
 	}
 
@@ -134,5 +136,15 @@ func SplitParams(typesStr string) []string {
 
 	result = append(result, strings.Join(buffer, ""))
 
+	return result
+}
+
+func cleanSplitTypes(splitTypes []string) []string {
+	var result []string
+	for _, typeStr := range splitTypes {
+		if typeStr != "" {
+			result = append(result, typeStr)
+		}
+	}
 	return result
 }
