@@ -81,7 +81,7 @@ func IsTuple(typeStr string) (bool, []string, error) {
 				splitTypes = append(splitTypes, strings.Split(typeStr[innerCloseBracketsIndex+2:closeParenthesisIndex], ",")...)
 			}
 		} else {
-			splitTypes = strings.Split(typeStr[openParenthesisIndex+1:closeParenthesisIndex], ",")
+			splitTypes = SplitParams(typeStr[openParenthesisIndex+1 : closeParenthesisIndex])
 		}
 
 		splitTypes = cleanSplitTypes(splitTypes)
