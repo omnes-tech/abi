@@ -136,7 +136,7 @@ func Decode(typeStrs []string, data []byte) ([]any, error) {
 				return []any{}, err
 			}
 
-			result = append(result, innerResult)
+			result = append(result, innerResult...)
 		} else if isTypeTuple {
 			innerResult, err := Decode(splitedTypes, data[init:end])
 			if err != nil {
