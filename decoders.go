@@ -118,25 +118,40 @@ func Decode(typeStrs []string, data []byte) ([]any, error) {
 		if err != nil {
 			return []any{}, err
 		}
-		var arraySize int
+
 		if isTypeArray {
-			arraySize = int(bigInt.SetBytes(data[offset : offset+32]).Uint64())
-			if givenArraySize != 0 && givenArraySize != arraySize {
-				return []any{}, fmt.Errorf("array size mismatch")
-			}
-			typeStr = typeStr[:strings.LastIndex(typeStr, "[")]
+			if givenArraySize != 0 {
+				offset = int(bigInt.SetBytes(data[byteCursor : byteCursor+32]).Uint64())
+				typeStr = typeStr[:strings.LastIndex(typeStr, "[")]
 
-			var arrayTypeStrs []string
-			for j := 0; j < arraySize; j++ {
-				arrayTypeStrs = append(arrayTypeStrs, typeStr)
+				var arrayTypeStrs []string
+				for j := 0; j < givenArraySize; j++ {
+					arrayTypeStrs = append(arrayTypeStrs, typeStr)
+				}
+
+				innerResult, err := Decode(arrayTypeStrs, data[offset:offset+32*givenArraySize])
+				if err != nil {
+					return []any{}, err
+				}
+
+				result = append(result, innerResult)
+			} else {
+				arraySize := int(bigInt.SetBytes(data[offset : offset+32]).Uint64())
+				typeStr = typeStr[:strings.LastIndex(typeStr, "[")]
+
+				var arrayTypeStrs []string
+				for j := 0; j < arraySize; j++ {
+					arrayTypeStrs = append(arrayTypeStrs, typeStr)
+				}
+
+				innerResult, err := Decode(arrayTypeStrs, data[offset+32:offset+32*(arraySize+1)])
+				if err != nil {
+					return []any{}, err
+				}
+
+				result = append(result, innerResult)
 			}
 
-			innerResult, err := Decode(arrayTypeStrs, data[offset+32:offset+32*(arraySize+1)])
-			if err != nil {
-				return []any{}, err
-			}
-
-			result = append(result, innerResult...)
 		} else if isTypeTuple {
 			innerResult, err := Decode(splitedTypes, data[init:end])
 			if err != nil {

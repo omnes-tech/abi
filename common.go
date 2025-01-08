@@ -10,10 +10,16 @@ import (
 // i.e. if it is either a string, bytes, or an array.
 func IsDynamic(typeStr string, isTuple bool) bool {
 
-	if strings.Contains(typeStr, "[") ||
-		strings.Contains(typeStr, "string") ||
-		typeStr == "bytes" ||
-		(isTuple && (strings.Contains(typeStr, "bytes,") || strings.Contains(typeStr, "bytes)"))) {
+	openBracketsIndex := strings.Index(typeStr, "[")
+	closeBracketsIndex := strings.Index(typeStr, "]")
+
+	if openBracketsIndex == -1 {
+		if strings.Contains(typeStr, "string") ||
+			typeStr == "bytes" ||
+			(isTuple && (strings.Contains(typeStr, "bytes,") || strings.Contains(typeStr, "bytes)"))) {
+			return true
+		}
+	} else if closeBracketsIndex == openBracketsIndex+1 {
 		return true
 	}
 
