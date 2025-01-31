@@ -100,15 +100,20 @@ func Decode(typeStrs []string, data []byte) ([]any, error) {
 		var end int
 		isTypeDynamic := IsDynamic(typeStr, isTypeTuple)
 		if isTypeDynamic {
-			offset = int(bigInt.SetBytes(data[byteCursor : byteCursor+32]).Uint64())
+			offset = int(new(big.Int).SetBytes(data[byteCursor : byteCursor+32]).Uint64())
 
 			var dynamicSize int
-			if !isTypeTuple {
-				dynamicSize = int(bigInt.SetBytes(data[offset : offset+32]).Uint64())
-			}
 			init = offset
-			end = offset + dynamicSize
+			if !isTypeTuple {
+				dynamicSize = int(new(big.Int).SetBytes(data[offset : offset+32]).Uint64())
+				end = offset + 32 + dynamicSize
+			} else {
+				end = offset + 32
+			}
 
+		} else if isTypeTuple {
+			init = int(byteCursor)
+			end = int(byteCursor + uint64(32*len(splitedTypes)))
 		} else {
 			init = int(byteCursor)
 			end = int(byteCursor + 32)
@@ -123,12 +128,17 @@ func Decode(typeStrs []string, data []byte) ([]any, error) {
 			var innerData []byte
 			var arraySize int
 			if givenArraySize != 0 {
-				offset = int(bigInt.SetBytes(data[byteCursor : byteCursor+32]).Uint64())
+				offset = int(new(big.Int).SetBytes(data[byteCursor : byteCursor+32]).Uint64())
 				arraySize = givenArraySize
 				innerData = data[offset : offset+32*givenArraySize]
 			} else {
-				arraySize = int(bigInt.SetBytes(data[offset : offset+32]).Uint64())
-				innerData = data[offset+32 : offset+32*(arraySize+1)]
+				arraySize = int(new(big.Int).SetBytes(data[offset : offset+32]).Uint64())
+				// if isTypeTuple {
+				// 	innerData = data[offset+32 : offset+32*(arraySize*len(splitedTypes)+1)]
+				// } else {
+				// 	innerData = data[offset+32 : offset+32*(arraySize+1)]
+				// }
+				innerData = data[offset+32:]
 			}
 
 			typeStr = typeStr[:strings.LastIndex(typeStr, "[")]
@@ -146,7 +156,12 @@ func Decode(typeStrs []string, data []byte) ([]any, error) {
 			result = append(result, innerResult)
 
 		} else if isTypeTuple {
-			innerResult, err := Decode(splitedTypes, data[init:end])
+			var innerResult []any
+			if isTypeDynamic {
+				innerResult, err = Decode(splitedTypes, data[init:])
+			} else {
+				innerResult, err = Decode(splitedTypes, data[init:end])
+			}
 			if err != nil {
 				return []any{}, err
 			}
@@ -161,8 +176,14 @@ func Decode(typeStrs []string, data []byte) ([]any, error) {
 			result = append(result, val)
 		}
 
-		byteCursor += 32
+		if isTypeTuple {
+			byteCursor += uint64(end - init)
+		} else {
+			byteCursor += 32
+		}
 	}
+
+	// fmt.Println("result", result)
 
 	return result, nil
 }

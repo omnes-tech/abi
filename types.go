@@ -32,9 +32,6 @@ var two = big.NewInt(2)
 // floatTen big.Float for 10
 var floatTen = big.NewFloat(10)
 
-// bigInt arbitrary big.Int
-var bigInt = new(big.Int)
-
 // validCoreTypes maps type to its byte length and
 // minimum and maximum value restrictions.
 var validCoreTypes = map[string]paramType{
