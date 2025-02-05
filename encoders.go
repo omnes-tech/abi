@@ -257,9 +257,9 @@ func encodePacked(typeStr string, value any) ([]byte, error) {
 			return []byte{}, fmt.Errorf("invalid parameter type: %v, %T", typeStr, value)
 		}
 		if val {
-			bytes = append(bytes, []byte{0x0, 0x1}...)
+			bytes = append(bytes, []byte{0x1}...)
 		} else {
-			bytes = append(bytes, []byte{0x0, 0x0}...)
+			bytes = append(bytes, []byte{0x0}...)
 		}
 	case "string":
 		val, ok := value.(string)
