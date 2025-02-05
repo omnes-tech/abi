@@ -1,6 +1,7 @@
 package abi
 
 import (
+	"bytes"
 	"fmt"
 	"math/big"
 	"strconv"
@@ -259,6 +260,17 @@ func decodePacked(typeStr string, data []byte) (any, error) {
 			}
 
 			decoded := new(big.Int)
+			if typeStr[:3] == "int" {
+				if (data[0] & 0x80) != 0 {
+					allOnes := new(big.Int).SetBytes(bytes.Repeat([]byte{0xff}, 32))
+					decoded.SetBytes(data)
+					decoded.Xor(decoded, allOnes)
+					decoded.Add(decoded, big.NewInt(1))
+					decoded.Neg(decoded)
+					return decoded, nil
+				}
+			}
+
 			return decoded.SetBytes(data), nil
 		} else if typeStr[:5] == "bytes" {
 			if len(typeStr) > 5 {
