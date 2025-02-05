@@ -261,9 +261,10 @@ func decodePacked(typeStr string, data []byte) (any, error) {
 
 			decoded := new(big.Int)
 			if typeStr[:3] == "int" {
-				if (data[0] & 0x80) != 0 {
-					allOnes := new(big.Int).SetBytes(bytes.Repeat([]byte{0xff}, 32))
-					decoded.SetBytes(data)
+				relevantData := data[len(data)-bits/8:]
+				if (relevantData[0] & 0x80) != 0 {
+					allOnes := new(big.Int).SetBytes(bytes.Repeat([]byte{0xff}, bits/8))
+					decoded.SetBytes(relevantData)
 					decoded.Xor(decoded, allOnes)
 					decoded.Add(decoded, big.NewInt(1))
 					decoded.Neg(decoded)

@@ -298,6 +298,21 @@ func encodePacked(typeStr string, value any) ([]byte, error) {
 				return []byte{}, fmt.Errorf("value out of allowed range: %v, %v", typeStr, val)
 			}
 
+			if typeStr[:3] == "int" && val.Sign() == -1 {
+				absVal := new(big.Int).Abs(val)
+				absVal.Sub(absVal, big.NewInt(1))
+
+				// Create a mask of all 1s for the specific bit size
+				mask := new(big.Int).Lsh(big.NewInt(1), uint(bits))
+				mask.Sub(mask, big.NewInt(1))
+
+				// NOT operation (flip all bits)
+				absVal.Xor(absVal, mask)
+
+				// Trim to correct number of bytes
+				return common.RightPadBytes(absVal.Bytes(), bits/8), nil
+			}
+
 			bytes = append(bytes, common.LeftPadBytes(val.Bytes(), bits/8)...)
 
 		} else if typeStr[:5] == "bytes" {
