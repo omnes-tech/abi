@@ -2,7 +2,7 @@ module github.com/omnes-tech/abi
 
 go 1.22.3
 
-require github.com/ethereum/go-ethereum v1.14.13
+require github.com/ethereum/go-ethereum v1.15.1
 
 require (
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.3.0 // indirect
